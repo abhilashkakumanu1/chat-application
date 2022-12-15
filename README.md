@@ -14,3 +14,7 @@ This repo is to learn fundamentals of typescript &amp; socket.io
    4. any
    5. void
 5. You can select the o/p spec of JS - like ES6, ES7, etc. Without TS you will need something like Babel to transpile newer JS to older one
+
+## Setup
+
+1. ts-node is a runtime for TS like node is a runtime for JS. With ts-node you don't need the compilation step
