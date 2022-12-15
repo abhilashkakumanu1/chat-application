@@ -5,7 +5,13 @@
   "repository": "git@github.com:abhilashkakumanu1/chat-application.git",
   "author": "Abhilash Kakumanu <abhilashkakumanu1@gmail.com>",
   "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "node build/index.js",
+    "build-and-start": "rimraf ./build && yarn run build && yarn run start"
+  },
   "dependencies": {
+    "rimraf": "^3.0.2",
     "typescript": "^4.9.4"
   }
 }
