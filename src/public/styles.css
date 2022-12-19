@@ -1,0 +1,12 @@
+.inputBox {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    height: 1.5rem;
+    width: 100%;
+    padding-bottom: 10px;
+}
+#inputMessage{
+    width:90%;
+    margin-right: 10px;
+}
