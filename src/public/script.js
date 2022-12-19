@@ -21,3 +21,9 @@ function addMessageToScreen(message) {
 
   msgElement.appendChild(messageBox);
 }
+
+function socketFunc() {
+  const socket = io();
+}
+
+socketFunc();
