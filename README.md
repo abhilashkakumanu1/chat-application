@@ -14,6 +14,7 @@ This repo is to learn fundamentals of typescript &amp; socket.io
    4. any
    5. void
 5. You can select the o/p spec of JS - like ES6, ES7, etc. Without TS you will need something like Babel to transpile newer JS to older one
+6. optional parameter `?:`
 
 ## Setup
 
