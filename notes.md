@@ -15,3 +15,8 @@
    1. create a plan - entity relationship diagram, class diagram, use cases diagrams
    2. divide work
    3. work parallel & review each other's code
+
+## 2022-12-20
+
+1. Problem faced not able to share frontend and backend environment variables - didn't realize until now due to webpack used to solve this react.
+2. 
