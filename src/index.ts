@@ -51,7 +51,7 @@ io.on("connection", (socket) => {
   socket.on(CONFIG.ADD_USER, (username) => {
     console.log(`New user: ${username}`);
     DB[username] = true;
-    io.emit(CONFIG.USER_ADDED, username);
+    socket.broadcast.emit(CONFIG.USER_ADDED, username);
   });
 });
 
