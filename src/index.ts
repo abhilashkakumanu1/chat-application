@@ -10,6 +10,7 @@ const CONFIG = {
   MESSAGE_FROM_FRONTEND: "message from frontend",
   MESSAGE_FROM_BACKEND: "message from backend",
   ADD_USER: "add new user",
+  USER_ADDED: "new user successfully added",
 };
 
 const app = express();
@@ -50,6 +51,7 @@ io.on("connection", (socket) => {
   socket.on(CONFIG.ADD_USER, (username) => {
     console.log(`New user: ${username}`);
     DB[username] = true;
+    io.emit(CONFIG.USER_ADDED, username);
   });
 });
 

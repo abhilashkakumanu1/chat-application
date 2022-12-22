@@ -11,5 +11,10 @@
   margin-right: 10px;
 }
 .message {
+  font-size: 24px;
   background-color: rgb(212, 210, 210);
+}
+.user-added {
+  color: rgb(23, 20, 20);
+  font-size: 16px;
 }

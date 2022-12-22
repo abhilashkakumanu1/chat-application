@@ -10,6 +10,7 @@ const CONFIG = {
   MESSAGE_FROM_FRONTEND: "message from frontend",
   MESSAGE_FROM_BACKEND: "message from backend",
   ADD_USER: "add new user",
+  USER_ADDED: "new user successfully added",
 };
 
 formElement.addEventListener("submit", (event) => {
@@ -25,15 +26,26 @@ socket.on(CONFIG.MESSAGE_FROM_BACKEND, (msg) => {
   addMessageToScreen(msg);
 });
 
+// Subscribe to broadcast
+socket.on(CONFIG.USER_ADDED, (username) => {
+  addNewUserMessageToScreen(username);
+});
+
 function addMessageToScreen(message) {
   const messageBox = document.createElement("div");
   const textEle = document.createElement("p");
   textEle.classList.add("message");
-
   textEle.innerText = message;
-
   messageBox.appendChild(textEle);
+  msgElement.appendChild(messageBox);
+}
 
+function addNewUserMessageToScreen(username) {
+  const messageBox = document.createElement("div");
+  const textEle = document.createElement("p");
+  textEle.classList.add("user-added");
+  textEle.innerText = `New user added: ${username}....`;
+  messageBox.appendChild(textEle);
   msgElement.appendChild(messageBox);
 }
 
