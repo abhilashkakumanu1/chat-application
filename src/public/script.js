@@ -2,6 +2,9 @@ const msgElement = document.getElementById("messages");
 const formElement = document.getElementById("submit-form");
 const inputBoxElement = document.getElementById("inputMessage");
 
+// Global variables
+let USERNAME;
+
 // TODO: Figure out a way to have these common for FE & BE
 const CONFIG = {
   FROM_FRONTEND: "message from frontend",
@@ -33,4 +36,8 @@ function addMessageToScreen(message) {
   msgElement.appendChild(messageBox);
 }
 
-socketFunc();
+function onLoad() {
+  USERNAME = prompt("Enter username");
+}
+
+onLoad();
