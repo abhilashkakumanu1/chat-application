@@ -11,16 +11,67 @@ const CONFIG = {
   MESSAGE_FROM_BACKEND: "message from backend",
   ADD_USER: "add new user",
   USER_ADDED: "new user successfully added",
+  USER_TYPING_FROM_FRONTEND: "user started typing",
+  USERS_TYPING_FROM_BACKEND: "users typing",
 };
 
 const app = express();
 
 // LOCAL DB
-interface IDB {
+type Users = {
   [username: string]: boolean;
+};
+
+interface IDB {
+  users: Users;
+  currentlyTypingUsers: Users;
 }
 
-const DB: IDB = {};
+class InMemory_DB implements IDB {
+  private _users: Users;
+  private _currentlyTypingUsers: Users;
+
+  constructor() {
+    this._users = {};
+    this._currentlyTypingUsers = {};
+  }
+
+  // Getters
+  public get users(): Users {
+    return this._users;
+  }
+
+  public get currentlyTypingUsers(): Users {
+    return this._currentlyTypingUsers;
+  }
+
+  // Setters
+  public addUsers(username: string) {
+    this._users[username.trim()] = true;
+  }
+
+  public addCurrentlyTypingUser(username: string) {
+    this._currentlyTypingUsers[username.trim()] = true;
+  }
+
+  public removeCurrentlyTypingUser(username: string) {
+    delete this._currentlyTypingUsers[username.trim()];
+  }
+
+  // Utility Funcs
+  public getUsersTypingMsg(): string {
+    const usernames = Object.keys(this._currentlyTypingUsers);
+    if (usernames.length === 1) {
+      return `${usernames[0]} is typing....`;
+    } else if (usernames.length > 1) {
+      return usernames.join(", ") + " are typing....";
+    } else {
+      return "";
+    }
+  }
+}
+
+const db = new InMemory_DB();
 
 // Allow CORS
 app.use(
@@ -43,15 +94,22 @@ io.on("connection", (socket) => {
     console.log("user disconnected");
   });
 
-  socket.on(CONFIG.MESSAGE_FROM_FRONTEND, (msg) => {
+  socket.on(CONFIG.MESSAGE_FROM_FRONTEND, (msg: string) => {
     console.log(`message from backend: ${msg}`);
     io.emit(CONFIG.MESSAGE_FROM_BACKEND, msg);
   });
 
-  socket.on(CONFIG.ADD_USER, (username) => {
+  socket.on(CONFIG.ADD_USER, (username: string) => {
     console.log(`New user: ${username}`);
-    DB[username] = true;
+    db.users[username] = true;
     socket.broadcast.emit(CONFIG.USER_ADDED, username);
+  });
+
+  socket.on(CONFIG.USER_TYPING_FROM_FRONTEND, (username: string) => {
+    db.addCurrentlyTypingUser(username);
+
+    const usersTypingMsg = db.getUsersTypingMsg();
+    socket.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);
   });
 });
 

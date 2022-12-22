@@ -11,6 +11,8 @@ const CONFIG = {
   MESSAGE_FROM_BACKEND: "message from backend",
   ADD_USER: "add new user",
   USER_ADDED: "new user successfully added",
+  USER_TYPING_FROM_FRONTEND: "user started typing",
+  USERS_TYPING_FROM_BACKEND: "users typing",
 };
 
 formElement.addEventListener("submit", (event) => {
@@ -21,30 +23,43 @@ formElement.addEventListener("submit", (event) => {
   socket.emit(CONFIG.MESSAGE_FROM_FRONTEND, text);
 });
 
-// Subscribe to broadcast
+// user typing...functionality
+inputBoxElement.addEventListener("focus", (event) => {
+  socket.emit(CONFIG.USER_TYPING_FROM_FRONTEND, USERNAME);
+});
+
+// Subscribe to new message
 socket.on(CONFIG.MESSAGE_FROM_BACKEND, (msg) => {
   addMessageToScreen(msg);
 });
 
-// Subscribe to broadcast
+// Subscribe to user added
 socket.on(CONFIG.USER_ADDED, (username) => {
   addNewUserMessageToScreen(username);
 });
 
+// Subscribe to users typing
+socket.on(CONFIG.USERS_TYPING_FROM_BACKEND, (msg) => {
+  addUsersTypingMessageScreen(msg);
+});
+
 function addMessageToScreen(message) {
-  const messageBox = document.createElement("div");
-  const textEle = document.createElement("p");
-  textEle.classList.add("message");
-  textEle.innerText = message;
-  messageBox.appendChild(textEle);
-  msgElement.appendChild(messageBox);
+  addTextBox("message", message);
 }
 
 function addNewUserMessageToScreen(username) {
+  addTextBox("user-created", username);
+}
+
+function addUsersTypingMessageScreen(msg) {
+  addTextBox("users-typing", msg);
+}
+
+function addTextBox(className, text) {
   const messageBox = document.createElement("div");
   const textEle = document.createElement("p");
-  textEle.classList.add("user-added");
-  textEle.innerText = `New user added: ${username}....`;
+  textEle.classList.add(className);
+  textEle.innerText = text;
   messageBox.appendChild(textEle);
   msgElement.appendChild(messageBox);
 }
