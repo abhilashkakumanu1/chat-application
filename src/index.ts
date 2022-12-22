@@ -12,6 +12,7 @@ const CONFIG = {
   ADD_USER: "add new user",
   USER_ADDED: "new user successfully added",
   USER_TYPING_FROM_FRONTEND: "user started typing",
+  USER_STOPPED_TYPING_FROM_FRONTEND: "user stopped typing",
   USERS_TYPING_FROM_BACKEND: "users typing",
 };
 
@@ -107,6 +108,13 @@ io.on("connection", (socket) => {
 
   socket.on(CONFIG.USER_TYPING_FROM_FRONTEND, (username: string) => {
     db.addCurrentlyTypingUser(username);
+
+    const usersTypingMsg = db.getUsersTypingMsg();
+    socket.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);
+  });
+
+  socket.on(CONFIG.USER_STOPPED_TYPING_FROM_FRONTEND, (username: string) => {
+    db.removeCurrentlyTypingUser(username);
 
     const usersTypingMsg = db.getUsersTypingMsg();
     socket.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);

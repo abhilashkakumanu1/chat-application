@@ -1,6 +1,7 @@
 const msgElement = document.getElementById("messages");
 const formElement = document.getElementById("submit-form");
 const inputBoxElement = document.getElementById("inputMessage");
+const userTypingElement = document.getElementById("userTyping");
 
 // Global variables
 let USERNAME;
@@ -12,6 +13,7 @@ const CONFIG = {
   ADD_USER: "add new user",
   USER_ADDED: "new user successfully added",
   USER_TYPING_FROM_FRONTEND: "user started typing",
+  USER_STOPPED_TYPING_FROM_FRONTEND: "user stopped typing",
   USERS_TYPING_FROM_BACKEND: "users typing",
 };
 
@@ -24,8 +26,11 @@ formElement.addEventListener("submit", (event) => {
 });
 
 // user typing...functionality
-inputBoxElement.addEventListener("focus", (event) => {
+inputBoxElement.addEventListener("focusin", (_) => {
   socket.emit(CONFIG.USER_TYPING_FROM_FRONTEND, USERNAME);
+});
+inputBoxElement.add_Listener("focusout", (_) => {
+  socket.emit(CONFIG.USER_STOPPED_TYPING_FROM_FRONTEND, USERNAME);
 });
 
 // Subscribe to new message
@@ -40,7 +45,7 @@ socket.on(CONFIG.USER_ADDED, (username) => {
 
 // Subscribe to users typing
 socket.on(CONFIG.USERS_TYPING_FROM_BACKEND, (msg) => {
-  addUsersTypingMessageScreen(msg);
+  updateUserTypingMessage(msg);
 });
 
 function addMessageToScreen(message) {
@@ -51,8 +56,8 @@ function addNewUserMessageToScreen(username) {
   addTextBox("user-created", username);
 }
 
-function addUsersTypingMessageScreen(msg) {
-  addTextBox("users-typing", msg);
+function updateUserTypingMessage(msg) {
+  userTypingElement.innerText = msg;
 }
 
 function addTextBox(className, text) {
