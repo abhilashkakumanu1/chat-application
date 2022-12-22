@@ -7,8 +7,9 @@ let USERNAME;
 
 // TODO: Figure out a way to have these common for FE & BE
 const CONFIG = {
-  FROM_FRONTEND: "message from frontend",
-  FROM_BACKEND: "message from backend",
+  MESSAGE_FROM_FRONTEND: "message from frontend",
+  MESSAGE_FROM_BACKEND: "message from backend",
+  ADD_USER: "add new user",
 };
 
 formElement.addEventListener("submit", (event) => {
@@ -16,11 +17,11 @@ formElement.addEventListener("submit", (event) => {
   const text = inputBoxElement.value;
   inputBoxElement.value = "";
 
-  socket.emit(CONFIG.FROM_FRONTEND, text);
+  socket.emit(CONFIG.MESSAGE_FROM_FRONTEND, text);
 });
 
 // Subscribe to broadcast
-socket.on(CONFIG.FROM_BACKEND, (msg) => {
+socket.on(CONFIG.MESSAGE_FROM_BACKEND, (msg) => {
   addMessageToScreen(msg);
 });
 
@@ -38,6 +39,9 @@ function addMessageToScreen(message) {
 
 function onLoad() {
   USERNAME = prompt("Enter username");
+
+  // Send username to backend
+  socket.emit(CONFIG.ADD_USER, USERNAME);
 }
 
 onLoad();

@@ -7,11 +7,19 @@ import { Server as SocketServer } from "socket.io";
 
 // TODO: Figure out a way to have these common for FE & BE
 const CONFIG = {
-  FROM_FRONTEND: "message from frontend",
-  FROM_BACKEND: "message from backend",
+  MESSAGE_FROM_FRONTEND: "message from frontend",
+  MESSAGE_FROM_BACKEND: "message from backend",
+  ADD_USER: "add new user",
 };
 
 const app = express();
+
+// LOCAL DB
+interface IDB {
+  [username: string]: boolean;
+}
+
+const DB: IDB = {};
 
 // Allow CORS
 app.use(
@@ -30,13 +38,18 @@ app.use(express.static(path.resolve(__dirname, "./public/")));
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  socket.on(CONFIG.FROM_FRONTEND, (msg) => {
-    console.log(`message from backend: ${msg}`);
-    io.emit(CONFIG.FROM_BACKEND, msg);
-  });
-
   socket.on("disconnect", () => {
     console.log("user disconnected");
+  });
+
+  socket.on(CONFIG.MESSAGE_FROM_FRONTEND, (msg) => {
+    console.log(`message from backend: ${msg}`);
+    io.emit(CONFIG.MESSAGE_FROM_BACKEND, msg);
+  });
+
+  socket.on(CONFIG.ADD_USER, (username) => {
+    console.log(`New user: ${username}`);
+    DB[username] = true;
   });
 });
 
