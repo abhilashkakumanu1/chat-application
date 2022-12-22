@@ -4,12 +4,12 @@ import http from "http";
 import express from "express";
 import cors from "cors";
 import { Server as SocketServer } from "socket.io";
-import * as dotenv from 'dotenv'
 
-
-dotenv.config()
-
-const { FROM_FRONTEND = "message from frontend", FROM_BACKEND ="message from backend" } = process.env
+// TODO: Figure out a way to have these common for FE & BE
+const CONFIG = {
+  FROM_FRONTEND: "message from frontend",
+  FROM_BACKEND: "message from backend",
+};
 
 const app = express();
 
@@ -30,17 +30,15 @@ app.use(express.static(path.resolve(__dirname, "./public/")));
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  socket.on(FROM_FRONTEND, (msg)=>{
-    console.log(`message from backend: ${msg}`)
-    io.emit(FROM_BACKEND, msg)
-  })
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
+  socket.on(CONFIG.FROM_FRONTEND, (msg) => {
+    console.log(`message from backend: ${msg}`);
+    io.emit(CONFIG.FROM_BACKEND, msg);
   });
 
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
+  });
 });
-
 
 // ---------------------------------
 
