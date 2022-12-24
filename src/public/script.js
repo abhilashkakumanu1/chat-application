@@ -29,7 +29,7 @@ formElement.addEventListener("submit", (event) => {
 inputBoxElement.addEventListener("focusin", (_) => {
   socket.emit(CONFIG.USER_TYPING_FROM_FRONTEND, USERNAME);
 });
-inputBoxElement.add_Listener("focusout", (_) => {
+inputBoxElement.addEventListener("focusout", (_) => {
   socket.emit(CONFIG.USER_STOPPED_TYPING_FROM_FRONTEND, USERNAME);
 });
 
@@ -44,8 +44,8 @@ socket.on(CONFIG.USER_ADDED, (username) => {
 });
 
 // Subscribe to users typing
-socket.on(CONFIG.USERS_TYPING_FROM_BACKEND, (msg) => {
-  updateUserTypingMessage(msg);
+socket.on(CONFIG.USERS_TYPING_FROM_BACKEND, (usernamesStr) => {
+  userTypingElement.innerText = getUsersTypingMsg(usernamesStr);
 });
 
 function addMessageToScreen(message) {
@@ -53,11 +53,7 @@ function addMessageToScreen(message) {
 }
 
 function addNewUserMessageToScreen(username) {
-  addTextBox("user-created", username);
-}
-
-function updateUserTypingMessage(msg) {
-  userTypingElement.innerText = msg;
+  addTextBox("user-created", `User connected: ${username}`);
 }
 
 function addTextBox(className, text) {
@@ -69,8 +65,25 @@ function addTextBox(className, text) {
   msgElement.appendChild(messageBox);
 }
 
+function getUsersTypingMsg(usernamesStr) {
+  let usernames = JSON.parse(usernamesStr);
+
+  // remove current username
+  usernames = usernames.filter((username) => {
+    return username !== USERNAME;
+  });
+
+  if (usernames.length === 1) {
+    return `${usernames[0]} is typing....`;
+  } else if (usernames.length > 1) {
+    return usernames.join(", ") + " are typing....";
+  } else {
+    return "";
+  }
+}
+
 function onLoad() {
-  USERNAME = prompt("Enter username");
+  USERNAME = prompt("Enter username").trim();
 
   // Send username to backend
   socket.emit(CONFIG.ADD_USER, USERNAME);

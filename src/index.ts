@@ -59,16 +59,8 @@ class InMemory_DB implements IDB {
     delete this._currentlyTypingUsers[username.trim()];
   }
 
-  // Utility Funcs
-  public getUsersTypingMsg(): string {
-    const usernames = Object.keys(this._currentlyTypingUsers);
-    if (usernames.length === 1) {
-      return `${usernames[0]} is typing....`;
-    } else if (usernames.length > 1) {
-      return usernames.join(", ") + " are typing....";
-    } else {
-      return "";
-    }
+  public getUsernamesStr(): string {
+    return JSON.stringify(Object.keys(this._currentlyTypingUsers));
   }
 }
 
@@ -109,15 +101,15 @@ io.on("connection", (socket) => {
   socket.on(CONFIG.USER_TYPING_FROM_FRONTEND, (username: string) => {
     db.addCurrentlyTypingUser(username);
 
-    const usersTypingMsg = db.getUsersTypingMsg();
-    socket.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);
+    const usersTypingMsg = db.getUsernamesStr();
+    socket.broadcast.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);
   });
 
   socket.on(CONFIG.USER_STOPPED_TYPING_FROM_FRONTEND, (username: string) => {
     db.removeCurrentlyTypingUser(username);
 
-    const usersTypingMsg = db.getUsersTypingMsg();
-    socket.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);
+    const usersTypingMsg = db.getUsernamesStr();
+    socket.broadcast.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);
   });
 });
 
