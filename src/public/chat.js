@@ -84,6 +84,7 @@ function getUsersTypingMsg(usernamesStr) {
 
 function onLoad() {
   USERNAME = prompt("Enter username").trim();
+  
 
   // Send username to backend
   socket.emit(CONFIG.ADD_USER, USERNAME);

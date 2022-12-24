@@ -4,24 +4,232 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
-    <title>Chat Application</title>
-    <!-- <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script> -->
+    <link rel="stylesheet" href="login.css" />
+    <title>Login - Chat Appl</title>
   </head>
   <body>
-    <h1>Chat Application</h1>
-    <div id="messages"></div>
-    <p id="userTyping"></p>
-    <form id="submit-form">
-      <div class="inputBox">
-        <input type="text" id="inputMessage" />
-        <button id="send-button">Send</button>
+    <!-- Main wrapper -->
+    <div class="wrapper">
+      <!-- Form box -->
+      <div class="form">
+        <!-- Tabs -->
+        <div class="form__tabs">
+          <a href="#" data-target="signup" class="tab active">Signup</a>
+          <a href="#" data-target="login" class="tab">Login</a>
+        </div>
+        <!-- ./ Tabs -->
+
+        <!-- Main form wrapper -->
+        <div class="form__content">
+          <!-- First form (tab content) -->
+          <div
+            class="form-variant form-variant--signup active"
+            data-id="signup"
+          >
+            <h2 class="text-center">Signup</h2>
+            <form action="/signup" method="post">
+              <!-- Input group (Name) -->
+              <div class="input-group input-group-icon">
+                <label for="signup-Username">Your Username</label>
+                <input
+                  type="text"
+                  id="signup-Username"
+                  name="username"
+                  placeholder="Your Username"
+                  class="input-field"
+                />
+                <div class="input-icon">
+                  <object
+                    type="image/svg+xml"
+                    data="https://eli-nathan.github.io/Login-Signup/assets/images/user.svg"
+                    class="input-icon input-icon--name"
+                  ></object>
+                </div>
+              </div>
+              <!-- Input group (Email) -->
+              <!-- <div class="input-group input-group-icon">
+                <label for="signup-email">Your email</label>
+                <input
+                  type="email"
+                  id="signup-email"
+                  name="email"
+                  placeholder="Your email"
+                  class="input-field"
+                />
+                <div class="input-icon">
+                  <object
+                    type="image/svg+xml"
+                    data="https://eli-nathan.github.io/Login-Signup/assets/images/email.svg"
+                    class="input-icon input-icon--email"
+                  ></object>
+                </div>
+              </div> -->
+              <!-- Input group (Password) -->
+              <div class="input-group input-group-icon">
+                <label for="signup-password">New password</label>
+                <input
+                  type="password"
+                  id="signup-password"
+                  name="password"
+                  placeholder="Your password"
+                  class="input-field"
+                />
+                <div class="input-icon">
+                  <object
+                    type="image/svg+xml"
+                    data="https://eli-nathan.github.io/Login-Signup/assets/images/password.svg"
+                    class="input-icon input-icon--password"
+                  ></object>
+                </div>
+              </div>
+              <!-- Input group (Submit) -->
+              <div class="input-group">
+                <input
+                  type="submit"
+                  class="input-field input-field--submit"
+                  value="Sign up"
+                />
+              </div>
+            </form>
+          </div>
+          <!-- ./ First form (tab content) -->
+
+          <!-- Second form (tab content) -->
+          <div class="form-variant form-variant--login" data-id="login">
+            <h2 class="text-center">Login</h2>
+            <form>
+              <!-- Input group (Username) -->
+              <div class="input-group input-group-icon">
+                <label for="login-Username">Your Username</label>
+                <input
+                  type="Username"
+                  id="login-Username"
+                  name="Username"
+                  placeholder="Your Username"
+                  class="input-field"
+                />
+                <div class="input-icon">
+                  <object
+                    type="image/svg+xml"
+                    data="https://eli-nathan.github.io/Login-Signup/assets/images/email.svg"
+                    class="input-icon input-icon--email"
+                  ></object>
+                </div>
+              </div>
+              <!-- Input group (Password) -->
+              <div class="input-group input-group-icon">
+                <label for="login-password">Password</label>
+                <input
+                  type="password"
+                  id="login-password"
+                  name="password"
+                  placeholder="Your password"
+                  class="input-field"
+                />
+                <div class="input-icon">
+                  <object
+                    type="image/svg+xml"
+                    data="https://eli-nathan.github.io/Login-Signup/assets/images/password.svg"
+                    class="input-icon input-icon--password"
+                  ></object>
+                </div>
+              </div>
+              <!-- Input group (Submit )-->
+              <div class="input-group">
+                <input
+                  type="submit"
+                  class="input-field input-field--submit"
+                  value="Login"
+                />
+              </div>
+            </form>
+            <!-- Forgot password link -->
+            <!-- <a href="#" data-target="forgot" class="tab text-center forgot-link"
+              >Forgot password?</a
+            > -->
+          </div>
+          <!-- ./ Second form (tab content) -->
+
+          <!-- Third form (tab content) -->
+          <div class="form-variant form-variant--forgot" data-id="forgot">
+            <h2 class="text-center">Forgot your password?</h2>
+            <form>
+              <!-- Input group (Email) -->
+              <div class="input-group input-group-icon">
+                <label for="forgot-email">Your email</label>
+                <input
+                  type="email"
+                  id="forgot-email"
+                  name="email"
+                  placeholder="Your email"
+                  class="input-field"
+                />
+                <div class="input-icon">
+                  <object
+                    type="image/svg+xml"
+                    data="https://eli-nathan.github.io/Login-Signup/assets/images/email.svg"
+                    class="input-icon input-icon--email"
+                  ></object>
+                </div>
+              </div>
+              <!-- Input group (Submit) -->
+              <div class="input-group">
+                <input
+                  type="submit"
+                  class="input-field input-field--submit"
+                  value="Recover password"
+                />
+              </div>
+            </form>
+          </div>
+          <!-- ./ Third form (tab content) -->
+        </div>
+        <!-- ./ Main form wrapper -->
       </div>
-    </form>
+      <!-- ./ Form box -->
+    </div>
+    <!-- ./ Main wrapper -->
   </body>
-  <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
   <script>
-    var socket = io();
+    // On load
+    window.addEventListener("load", function () {
+      // Get all tabs and content panes and define i for later use
+      let theTabs = document.querySelectorAll("[data-target]"),
+        contentPanes = document.querySelectorAll("[data-id]"),
+        i;
+
+      // Tabbing functionality
+      function theTabClicks(e) {
+        // Prevent link click
+        e.preventDefault();
+        /*
+         * Define local variables:
+         * Tab that was clicked
+         * ID of that tab
+         * Which tab content to make active
+         */
+        let clickedTab = e.target,
+          activePaneId = clickedTab.getAttribute("data-target"),
+          activePane = document.querySelectorAll(
+            '[data-id="' + activePaneId + '"]'
+          );
+
+        // For all the tabs
+        for (i = 0; i < theTabs.length; i++) {
+          // Remove active classes
+          theTabs[i].classList.remove("active");
+          contentPanes[i].classList.remove("active");
+        }
+        // Add active classes to the elements
+        clickedTab.classList.add("active");
+        activePane[0].classList.add("active");
+      }
+
+      // Add event listener to all tabs
+      for (i = 0; i < theTabs.length; i++) {
+        // Call function with event listener
+        theTabs[i].addEventListener("click", theTabClicks);
+      }
+    });
   </script>
-  <script src="./script.js" type="module"></script>
 </html>

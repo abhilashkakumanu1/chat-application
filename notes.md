@@ -4,15 +4,16 @@
 - [x] Display messages typed by one user for everyone who connected
 - [x] **Identify users** - username functionality - (imp)
 - [x] Notify others when new user gets added
-- [ ] show if someone is Typing...(interesting!) => emit an event whenever the active state of input box changes & toggle isActive inside the eventListener on server
+- [x] show if someone is Typing...(interesting!) => emit an event whenever the active state of input box changes & toggle isActive inside the eventListener on server
+- [ ] user login support to identify separate users - instead of taking each connection as a new user (ask him username) + chat anonymous => give cool random usernames like pink-unicorn etc (like how Google Docs does it)
 - [ ] Show list of online users - UI to see list of active users
 - [ ] Maintain a history of messages (Good to have) => DB? In-Memory array will do for now
 - [ ] serve the website from localhost to the world (multi users can connect without putting it on server) - for testing multi-chat support locally => very very cool thing
-- [ ] user login support to identify separate users - instead of taking each connection as a new user (ask him username) + chat anonymous => give cool random usernames like pink-unicorn etc (like how Google Docs does it)
 
 ### Good to have
 
 - [ ] Instead of user connected - say "abhi" connected => take username before page loads and pass it to io()
+- [ ] We can trigger a fetch request to check whether the username name is already taken on change of username part of sign up form
 
 ## Ideas
 
