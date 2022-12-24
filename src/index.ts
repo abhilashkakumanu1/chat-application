@@ -4,14 +4,67 @@ import http from "http";
 import express from "express";
 import cors from "cors";
 import { Server as SocketServer } from "socket.io";
-import * as dotenv from 'dotenv'
 
-
-dotenv.config()
-
-const { FROM_FRONTEND = "message from frontend", FROM_BACKEND ="message from backend" } = process.env
+// TODO: Figure out a way to have these common for FE & BE
+const CONFIG = {
+  MESSAGE_FROM_FRONTEND: "message from frontend",
+  MESSAGE_FROM_BACKEND: "message from backend",
+  ADD_USER: "add new user",
+  USER_ADDED: "new user successfully added",
+  USER_TYPING_FROM_FRONTEND: "user started typing",
+  USER_STOPPED_TYPING_FROM_FRONTEND: "user stopped typing",
+  USERS_TYPING_FROM_BACKEND: "users typing",
+};
 
 const app = express();
+
+// LOCAL DB
+type Users = {
+  [username: string]: boolean;
+};
+
+interface IDB {
+  users: Users;
+  currentlyTypingUsers: Users;
+}
+
+class InMemory_DB implements IDB {
+  private _users: Users;
+  private _currentlyTypingUsers: Users;
+
+  constructor() {
+    this._users = {};
+    this._currentlyTypingUsers = {};
+  }
+
+  // Getters
+  public get users(): Users {
+    return this._users;
+  }
+
+  public get currentlyTypingUsers(): Users {
+    return this._currentlyTypingUsers;
+  }
+
+  // Setters
+  public addUsers(username: string) {
+    this._users[username.trim()] = true;
+  }
+
+  public addCurrentlyTypingUser(username: string) {
+    this._currentlyTypingUsers[username.trim()] = true;
+  }
+
+  public removeCurrentlyTypingUser(username: string) {
+    delete this._currentlyTypingUsers[username.trim()];
+  }
+
+  public getUsernamesStr(): string {
+    return JSON.stringify(Object.keys(this._currentlyTypingUsers));
+  }
+}
+
+const db = new InMemory_DB();
 
 // Allow CORS
 app.use(
@@ -30,17 +83,35 @@ app.use(express.static(path.resolve(__dirname, "./public/")));
 io.on("connection", (socket) => {
   console.log("a user connected");
 
-  socket.on(FROM_FRONTEND, (msg)=>{
-    console.log(`message from backend: ${msg}`)
-    io.emit(FROM_BACKEND, msg)
-  })
-
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
+  socket.on("disconnect", () => {
+    console.log("user disconnected");
   });
 
-});
+  socket.on(CONFIG.MESSAGE_FROM_FRONTEND, (msg: string) => {
+    console.log(`message from backend: ${msg}`);
+    io.emit(CONFIG.MESSAGE_FROM_BACKEND, msg);
+  });
 
+  socket.on(CONFIG.ADD_USER, (username: string) => {
+    console.log(`New user: ${username}`);
+    db.users[username] = true;
+    socket.broadcast.emit(CONFIG.USER_ADDED, username);
+  });
+
+  socket.on(CONFIG.USER_TYPING_FROM_FRONTEND, (username: string) => {
+    db.addCurrentlyTypingUser(username);
+
+    const usersTypingMsg = db.getUsernamesStr();
+    socket.broadcast.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);
+  });
+
+  socket.on(CONFIG.USER_STOPPED_TYPING_FROM_FRONTEND, (username: string) => {
+    db.removeCurrentlyTypingUser(username);
+
+    const usersTypingMsg = db.getUsernamesStr();
+    socket.broadcast.emit(CONFIG.USERS_TYPING_FROM_BACKEND, usersTypingMsg);
+  });
+});
 
 // ---------------------------------
 
